@@ -7,13 +7,44 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewModels="clr-namespace:DirectoryWatcher.ViewModels"
     Title="{Binding Title}"
-    Width="525"
+    Width="680"
     Height="350"
     d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
     <Grid>
-        <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" />
+        <ListBox Grid.Row="1" ItemsSource="{Binding DirectoryInfos}" />
+        <StackPanel Grid.Row="2" Margin="3">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left" Text="Directory Path : " />
+                <Border Width="0" Margin="2,0" />
+                <TextBox
+                    x:Name="TextBox"
+                    HorizontalAlignment="Stretch"
+                    DockPanel.Dock="Right"
+                    Text="{Binding DirectoryPath, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+
+            <Button
+                Margin="0,3"
+                Padding="15,0"
+                HorizontalAlignment="Right"
+                Command="{Binding AddDirectoryInfoCommand}"
+                CommandParameter="{Binding ElementName=TextBox}"
+                Content="登録" />
+
+            <StatusBar>
+                <TextBlock Text="ディレクトリ登録数 : " />
+            </StatusBar>
+
+        </StackPanel>
     </Grid>
 </Window>

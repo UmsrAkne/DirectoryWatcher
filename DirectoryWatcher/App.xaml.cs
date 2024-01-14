@@ -1,11 +1,11 @@
-﻿using Prism.Ioc;
+﻿using System.Windows;
 using DirectoryWatcher.Views;
-using System.Windows;
+using Prism.Ioc;
 
 namespace DirectoryWatcher
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    ///     Interaction logic for App.xaml
     /// </summary>
     public partial class App
     {
