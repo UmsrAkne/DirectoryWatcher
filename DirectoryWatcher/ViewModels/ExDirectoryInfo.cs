@@ -13,6 +13,6 @@ namespace DirectoryWatcher.ViewModels
 
         public int SubDirectoryCount { get; set; }
 
-        public string Fullname => DirectoryInfo != null ? DirectoryInfo.FullName : string.Empty;
+        public string FullName => DirectoryInfo != null ? DirectoryInfo.FullName : string.Empty;
     }
 }

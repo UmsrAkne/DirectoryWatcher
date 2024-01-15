@@ -43,7 +43,7 @@ namespace DirectoryWatcher.ViewModels
             }
 
             var d = new ExDirectoryInfo(new DirectoryInfo(DirectoryPath));
-            if (DirectoryInfos.FirstOrDefault(f => f.Fullname == d.Fullname) != null)
+            if (DirectoryInfos.FirstOrDefault(f => f.FullName == d.FullName) != null)
             {
                 return;
             }
