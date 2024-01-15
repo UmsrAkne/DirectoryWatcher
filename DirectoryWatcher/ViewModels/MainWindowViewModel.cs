@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Prism.Commands;
@@ -12,6 +13,7 @@ namespace DirectoryWatcher.ViewModels
         private string title = "Prism Application";
         private ObservableCollection<DirectoryInfo> directoryInfos = new ();
         private string directoryPath;
+        private List<FileSystemWatcher> watchingDirectory = new List<FileSystemWatcher>();
 
         public string Title { get => title; set => SetProperty(ref title, value); }
 
@@ -48,6 +50,27 @@ namespace DirectoryWatcher.ViewModels
 
             DirectoryInfos.Add(d);
             DirectoryPath = string.Empty;
+
+            var edi = new ExDirectoryInfo(d);
+            AddWatchingDirectory(edi);
         });
+
+        private void AddWatchingDirectory(ExDirectoryInfo d)
+        {
+            var directories =
+                Directory.GetDirectories(d.DirectoryInfo.FullName, "*", SearchOption.AllDirectories)
+                .Select(p => new DirectoryInfo(p));
+
+            var additionCount = 0;
+
+            foreach (var di in directories)
+            {
+                if(watchingDirectory.All(fw => fw.Path != di.FullName))
+                {
+                    watchingDirectory.Add(new FileSystemWatcher(d.DirectoryInfo.FullName));
+                    d.SubDirectoryCount = additionCount++;
+                }
+            }
+        }
     }
 }
