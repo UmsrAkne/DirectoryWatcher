@@ -11,13 +11,13 @@ namespace DirectoryWatcher.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private string title = "Prism Application";
-        private ObservableCollection<DirectoryInfo> directoryInfos = new ();
+        private ObservableCollection<ExDirectoryInfo> directoryInfos = new ();
         private string directoryPath;
         private List<FileSystemWatcher> watchingDirectory = new List<FileSystemWatcher>();
 
         public string Title { get => title; set => SetProperty(ref title, value); }
 
-        public ObservableCollection<DirectoryInfo> DirectoryInfos
+        public ObservableCollection<ExDirectoryInfo> DirectoryInfos
         {
             get => directoryInfos;
             set => SetProperty(ref directoryInfos, value);
@@ -42,8 +42,8 @@ namespace DirectoryWatcher.ViewModels
                 return;
             }
 
-            var d = new DirectoryInfo(DirectoryPath);
-            if (DirectoryInfos.FirstOrDefault(f => f.FullName == d.FullName) != null)
+            var d = new ExDirectoryInfo(new DirectoryInfo(DirectoryPath));
+            if (DirectoryInfos.FirstOrDefault(f => f.Fullname == d.Fullname) != null)
             {
                 return;
             }
@@ -51,8 +51,7 @@ namespace DirectoryWatcher.ViewModels
             DirectoryInfos.Add(d);
             DirectoryPath = string.Empty;
 
-            var edi = new ExDirectoryInfo(d);
-            AddWatchingDirectory(edi);
+            AddWatchingDirectory(d);
         });
 
         private void AddWatchingDirectory(ExDirectoryInfo d)
