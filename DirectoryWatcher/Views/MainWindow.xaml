@@ -21,7 +21,34 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0" />
-        <ListBox Grid.Row="1" ItemsSource="{Binding DirectoryInfos}" />
+        <ListBox
+            Grid.Row="1"
+            HorizontalContentAlignment="Stretch"
+            ItemsSource="{Binding DirectoryInfos}">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewModels:ExDirectoryInfo}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="80" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" HorizontalAlignment="Stretch">
+                            <TextBlock Grid.Column="0" Text="{Binding FullName}" />
+                        </Border>
+
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="5,0"
+                            Orientation="Horizontal">
+                            <TextBlock Text="SubDir : " />
+                            <TextBlock Text="{Binding SubDirectoryCount}" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <StackPanel Grid.Row="2" Margin="3">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Left" Text="Directory Path : " />

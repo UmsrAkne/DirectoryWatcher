@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Prism.Commands;
@@ -10,12 +11,13 @@ namespace DirectoryWatcher.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private string title = "Prism Application";
-        private ObservableCollection<DirectoryInfo> directoryInfos = new ();
+        private ObservableCollection<ExDirectoryInfo> directoryInfos = new ();
         private string directoryPath;
+        private List<FileSystemWatcher> watchingDirectory = new List<FileSystemWatcher>();
 
         public string Title { get => title; set => SetProperty(ref title, value); }
 
-        public ObservableCollection<DirectoryInfo> DirectoryInfos
+        public ObservableCollection<ExDirectoryInfo> DirectoryInfos
         {
             get => directoryInfos;
             set => SetProperty(ref directoryInfos, value);
@@ -40,7 +42,7 @@ namespace DirectoryWatcher.ViewModels
                 return;
             }
 
-            var d = new DirectoryInfo(DirectoryPath);
+            var d = new ExDirectoryInfo(new DirectoryInfo(DirectoryPath));
             if (DirectoryInfos.FirstOrDefault(f => f.FullName == d.FullName) != null)
             {
                 return;
@@ -48,6 +50,26 @@ namespace DirectoryWatcher.ViewModels
 
             DirectoryInfos.Add(d);
             DirectoryPath = string.Empty;
+
+            AddWatchingDirectory(d);
         });
+
+        private void AddWatchingDirectory(ExDirectoryInfo d)
+        {
+            var directories =
+                Directory.GetDirectories(d.DirectoryInfo.FullName, "*", SearchOption.AllDirectories)
+                .Select(p => new DirectoryInfo(p));
+
+            var additionCount = 0;
+
+            foreach (var di in directories)
+            {
+                if(watchingDirectory.All(fw => fw.Path != di.FullName))
+                {
+                    watchingDirectory.Add(new FileSystemWatcher(d.DirectoryInfo.FullName));
+                    d.SubDirectoryCount = additionCount++;
+                }
+            }
+        }
     }
 }
