@@ -17,6 +17,8 @@ namespace DirectoryWatcher.ViewModels
 
         public string Title { get => title; set => SetProperty(ref title, value); }
 
+        public string SoundFilePath { get; set; }
+
         public ObservableCollection<ExDirectoryInfo> DirectoryInfos
         {
             get => directoryInfos;
