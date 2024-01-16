@@ -68,6 +68,15 @@
                 CommandParameter="{Binding ElementName=TextBox}"
                 Content="登録" />
 
+            <DockPanel Margin="0,2">
+                <TextBlock DockPanel.Dock="Left" Text="Sound File Path" />
+                <Border Width="0" Margin="2,0" />
+                <TextBox
+                    HorizontalAlignment="Stretch"
+                    DockPanel.Dock="Right"
+                    Text="{Binding SoundFilePath, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+
             <StatusBar>
                 <TextBlock Text="ディレクトリ登録数 : " />
             </StatusBar>
