@@ -35,7 +35,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" HorizontalAlignment="Stretch">
-                            <TextBlock Grid.Column="0" Text="{Binding FullName}" />
+                            <TextBlock Text="{Binding FullName}" />
                         </Border>
 
                         <StackPanel
