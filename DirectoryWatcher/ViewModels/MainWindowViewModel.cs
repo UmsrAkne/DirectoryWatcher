@@ -10,10 +10,10 @@ namespace DirectoryWatcher.ViewModels
     // ReSharper disable once ClassNeverInstantiated.Global
     public class MainWindowViewModel : BindableBase
     {
+        private readonly List<FileSystemWatcher> watchingDirectory = new ();
         private string title = "Prism Application";
         private ObservableCollection<ExDirectoryInfo> directoryInfos = new ();
         private string directoryPath;
-        private List<FileSystemWatcher> watchingDirectory = new List<FileSystemWatcher>();
 
         public string Title { get => title; set => SetProperty(ref title, value); }
 
