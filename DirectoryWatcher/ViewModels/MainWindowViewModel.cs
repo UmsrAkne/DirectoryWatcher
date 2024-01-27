@@ -1,19 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Timers;
+using DirectoryWatcher.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 
 namespace DirectoryWatcher.ViewModels
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : BindableBase, IDisposable
     {
         private readonly List<FileSystemWatcher> watchingDirectory = new ();
+        private readonly Timer timer;
         private string title = "Prism Application";
         private ObservableCollection<ExDirectoryInfo> directoryInfos = new ();
         private string directoryPath;
+        private bool soundPlayRequested;
+
+        public MainWindowViewModel()
+        {
+            timer = new Timer();
+            timer.Elapsed += async (_, _) =>
+            {
+                if (soundPlayRequested)
+                {
+                    soundPlayRequested = false;
+                    await Player.PlaySoundAsync(!string.IsNullOrWhiteSpace(SoundFilePath) ? SoundFilePath : "notification.wav");
+                }
+            };
+
+            timer.Interval = 3000;
+            timer.Start();
+        }
 
         public string Title { get => title; set => SetProperty(ref title, value); }
 
@@ -56,11 +77,24 @@ namespace DirectoryWatcher.ViewModels
             AddWatchingDirectory(d);
         });
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            timer.Dispose();
+        }
+
         private void AddWatchingDirectory(ExDirectoryInfo d)
         {
             var directories =
                 Directory.GetDirectories(d.DirectoryInfo.FullName, "*", SearchOption.AllDirectories)
-                .Select(p => new DirectoryInfo(p));
+                    .Select(p => new DirectoryInfo(p)).ToList();
+
+            directories.Add(new DirectoryInfo(d.FullName));
 
             var additionCount = 0;
 
@@ -68,7 +102,14 @@ namespace DirectoryWatcher.ViewModels
             {
                 if(watchingDirectory.All(fw => fw.Path != di.FullName))
                 {
-                    watchingDirectory.Add(new FileSystemWatcher(d.DirectoryInfo.FullName));
+                    var fsw = new FileSystemWatcher(di.FullName);
+                    fsw.EnableRaisingEvents = true;
+                    fsw.Created += (_, _) =>
+                    {
+                        soundPlayRequested = true;
+                    };
+
+                    watchingDirectory.Add(fsw);
                     d.SubDirectoryCount = additionCount++;
                 }
             }
