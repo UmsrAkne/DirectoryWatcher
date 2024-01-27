@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -10,7 +11,7 @@ using Prism.Mvvm;
 namespace DirectoryWatcher.ViewModels
 {
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : BindableBase, IDisposable
     {
         private readonly List<FileSystemWatcher> watchingDirectory = new ();
         private readonly Timer timer;
@@ -75,6 +76,17 @@ namespace DirectoryWatcher.ViewModels
 
             AddWatchingDirectory(d);
         });
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            timer.Dispose();
+        }
 
         private void AddWatchingDirectory(ExDirectoryInfo d)
         {
