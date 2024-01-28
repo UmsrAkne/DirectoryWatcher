@@ -22,6 +22,8 @@ namespace DirectoryWatcher.ViewModels
 
         public MainWindowViewModel()
         {
+            SoundFilePath = new FileInfo("notification.wav").FullName;
+
             timer = new Timer();
             timer.Elapsed += async (_, _) =>
             {
