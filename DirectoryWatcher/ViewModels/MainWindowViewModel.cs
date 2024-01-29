@@ -42,6 +42,8 @@ namespace DirectoryWatcher.ViewModels
 
         public string SoundFilePath { get; set; }
 
+        public ObservableCollection<FileSystemWatcher> WatchingDirectories { get; set; } = new ();
+
         public ObservableCollection<ExDirectoryInfo> DirectoryInfos
         {
             get => directoryInfos;
@@ -112,6 +114,7 @@ namespace DirectoryWatcher.ViewModels
                     };
 
                     watchingDirectory.Add(fsw);
+                    WatchingDirectories.Add(fsw);
                     d.SubDirectoryCount = additionCount++;
                 }
             }
