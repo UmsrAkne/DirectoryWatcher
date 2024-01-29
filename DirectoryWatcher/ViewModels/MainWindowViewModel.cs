@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -13,7 +12,6 @@ namespace DirectoryWatcher.ViewModels
     // ReSharper disable once ClassNeverInstantiated.Global
     public class MainWindowViewModel : BindableBase, IDisposable
     {
-        private readonly List<FileSystemWatcher> watchingDirectory = new ();
         private readonly Timer timer;
         private string title = "Prism Application";
         private ObservableCollection<ExDirectoryInfo> directoryInfos = new ();
@@ -41,6 +39,8 @@ namespace DirectoryWatcher.ViewModels
         public string Title { get => title; set => SetProperty(ref title, value); }
 
         public string SoundFilePath { get; set; }
+
+        public ObservableCollection<FileSystemWatcher> WatchingDirectories { get; set; } = new ();
 
         public ObservableCollection<ExDirectoryInfo> DirectoryInfos
         {
@@ -102,7 +102,7 @@ namespace DirectoryWatcher.ViewModels
 
             foreach (var di in directories)
             {
-                if(watchingDirectory.All(fw => fw.Path != di.FullName))
+                if(WatchingDirectories.All(fw => fw.Path != di.FullName))
                 {
                     var fsw = new FileSystemWatcher(di.FullName);
                     fsw.EnableRaisingEvents = true;
@@ -111,7 +111,7 @@ namespace DirectoryWatcher.ViewModels
                         soundPlayRequested = true;
                     };
 
-                    watchingDirectory.Add(fsw);
+                    WatchingDirectories.Add(fsw);
                     d.SubDirectoryCount = additionCount++;
                 }
             }

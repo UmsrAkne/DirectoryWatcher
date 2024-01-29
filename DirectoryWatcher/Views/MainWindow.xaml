@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:io="clr-namespace:System.IO;assembly=System.IO.FileSystem.Watcher"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewModels="clr-namespace:DirectoryWatcher.ViewModels"
@@ -24,10 +25,10 @@
         <ListBox
             Grid.Row="1"
             HorizontalContentAlignment="Stretch"
-            ItemsSource="{Binding DirectoryInfos}">
+            ItemsSource="{Binding WatchingDirectories}">
 
             <ListBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type viewModels:ExDirectoryInfo}">
+                <DataTemplate DataType="{x:Type io:FileSystemWatcher}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -35,16 +36,8 @@
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" HorizontalAlignment="Stretch">
-                            <TextBlock Text="{Binding FullName}" />
+                            <TextBlock Text="{Binding Path}" />
                         </Border>
-
-                        <StackPanel
-                            Grid.Column="1"
-                            Margin="5,0"
-                            Orientation="Horizontal">
-                            <TextBlock Text="SubDir : " />
-                            <TextBlock Text="{Binding SubDirectoryCount}" />
-                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
