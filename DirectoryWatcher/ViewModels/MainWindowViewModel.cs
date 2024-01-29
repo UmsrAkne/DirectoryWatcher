@@ -17,6 +17,7 @@ namespace DirectoryWatcher.ViewModels
         private ObservableCollection<ExDirectoryInfo> directoryInfos = new ();
         private string directoryPath;
         private bool soundPlayRequested;
+        private FileSystemWatcher selectedItem;
 
         public MainWindowViewModel()
         {
@@ -41,6 +42,12 @@ namespace DirectoryWatcher.ViewModels
         public string SoundFilePath { get; set; }
 
         public ObservableCollection<FileSystemWatcher> WatchingDirectories { get; set; } = new ();
+
+        public FileSystemWatcher SelectedItem
+        {
+            get => selectedItem;
+            set => SetProperty(ref selectedItem, value);
+        }
 
         public ObservableCollection<ExDirectoryInfo> DirectoryInfos
         {
@@ -79,6 +86,17 @@ namespace DirectoryWatcher.ViewModels
             AddWatchingDirectory(d);
         });
 
+        public DelegateCommand DeleteWatchingDirectoryCommand => new DelegateCommand(() =>
+        {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
+            SelectedItem.Created -= RequestSound;
+            WatchingDirectories.Remove(SelectedItem);
+        });
+
         public void Dispose()
         {
             Dispose(true);
@@ -106,15 +124,17 @@ namespace DirectoryWatcher.ViewModels
                 {
                     var fsw = new FileSystemWatcher(di.FullName);
                     fsw.EnableRaisingEvents = true;
-                    fsw.Created += (_, _) =>
-                    {
-                        soundPlayRequested = true;
-                    };
+                    fsw.Created += RequestSound;
 
                     WatchingDirectories.Add(fsw);
                     d.SubDirectoryCount = additionCount++;
                 }
             }
+        }
+
+        private void RequestSound(object sender, FileSystemEventArgs e)
+        {
+            soundPlayRequested = true;
         }
     }
 }
