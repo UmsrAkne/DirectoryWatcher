@@ -83,6 +83,19 @@
 
             </StackPanel>
 
+            <DockPanel Margin="0,4">
+                <TextBlock
+                    Width="200"
+                    DockPanel.Dock="Left"
+                    Text="Target extensions (Comma separated) " />
+                <Border Width="0" Margin="2,0" />
+
+                <TextBox
+                    HorizontalAlignment="Stretch"
+                    DockPanel.Dock="Right"
+                    Text="{Binding WatchExtensions, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+
             <DockPanel Margin="0,2">
                 <TextBlock DockPanel.Dock="Left" Text="Sound File Path" />
                 <Border Width="0" Margin="2,0" />
