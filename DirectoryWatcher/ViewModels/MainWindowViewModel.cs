@@ -152,7 +152,21 @@ namespace DirectoryWatcher.ViewModels
             }
             else
             {
-                soundPlayRequested = true;
+                var targetExtensions = WatchExtensions.Split(',')
+                    .Select(word => "." + word.Trim())
+                    .ToList();
+
+                if (targetExtensions.Count == 0)
+                {
+                    soundPlayRequested = true;
+                    return;
+                }
+
+                var f = new FileInfo(e.FullPath);
+                if (targetExtensions.Any(t => t == f.Extension))
+                {
+                    soundPlayRequested = true;
+                }
             }
         }
     }
