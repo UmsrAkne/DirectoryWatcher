@@ -43,6 +43,8 @@ namespace DirectoryWatcher.ViewModels
 
         public string SoundFilePath { get; set; }
 
+        public string WatchExtensions { get; set; }
+
         public ObservableCollection<FileSystemWatcher> WatchingDirectories { get; set; } = new ();
 
         public FileSystemWatcher SelectedItem
