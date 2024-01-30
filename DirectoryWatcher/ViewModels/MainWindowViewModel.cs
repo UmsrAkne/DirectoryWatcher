@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Timers;
+using System.Windows;
+using System.Windows.Threading;
 using DirectoryWatcher.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -134,7 +136,22 @@ namespace DirectoryWatcher.ViewModels
 
         private void RequestSound(object sender, FileSystemEventArgs e)
         {
-            soundPlayRequested = true;
+            if (Directory.Exists(e.FullPath))
+            {
+                // 作成されたのがディレクトリだった場合は音は鳴らさない。
+                // 新しいディレクトリは監視ディレクトリに加える。
+                // コレクションの操作には dispatcher を経由しないとダメ。直接操作しようとすると落ちる。
+                var dispatcher = Application.Current.Dispatcher;
+
+                dispatcher.Invoke(() =>
+                {
+                    AddWatchingDirectory(new ExDirectoryInfo(new DirectoryInfo(e.FullPath)));
+                });
+            }
+            else
+            {
+                soundPlayRequested = true;
+            }
         }
     }
 }
