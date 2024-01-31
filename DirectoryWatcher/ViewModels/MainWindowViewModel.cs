@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Timers;
 using System.Windows;
-using System.Windows.Threading;
 using DirectoryWatcher.Models;
 using Prism.Commands;
 using Prism.Mvvm;
