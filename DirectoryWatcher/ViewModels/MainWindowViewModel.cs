@@ -14,7 +14,7 @@ namespace DirectoryWatcher.ViewModels
     public class MainWindowViewModel : BindableBase, IDisposable
     {
         private readonly Timer timer;
-        private string title = "Prism Application";
+        private string title = "Directory watcher";
         private ObservableCollection<ExDirectoryInfo> directoryInfos = new ();
         private string directoryPath;
         private bool soundPlayRequested;
@@ -119,8 +119,6 @@ namespace DirectoryWatcher.ViewModels
 
             directories.Add(new DirectoryInfo(d.FullName));
 
-            var additionCount = 0;
-
             foreach (var di in directories)
             {
                 if(WatchingDirectories.All(fw => fw.Path != di.FullName))
@@ -130,7 +128,6 @@ namespace DirectoryWatcher.ViewModels
                     fsw.Created += RequestSound;
 
                     WatchingDirectories.Add(fsw);
-                    d.SubDirectoryCount = additionCount++;
                 }
             }
         }
