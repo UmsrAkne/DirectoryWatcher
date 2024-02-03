@@ -14,7 +14,7 @@ namespace DirectoryWatcher.ViewModels
     public class MainWindowViewModel : BindableBase, IDisposable
     {
         private readonly Timer timer;
-        private string title = "Prism Application";
+        private string title = "Directory watcher";
         private ObservableCollection<ExDirectoryInfo> directoryInfos = new ();
         private string directoryPath;
         private bool soundPlayRequested;
